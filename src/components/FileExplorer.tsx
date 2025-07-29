@@ -122,6 +122,24 @@ export default function FileExplorer({
       setLoading(false);
     }
   }
+
+  async function handleCreateFolder(name: string) {
+    const fullPath = prefix + name + "/";
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/create-folder`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folderName: fullPath }),
+      });
+      if (!res.ok) throw new Error("Failed to create folder");
+      await fetchObjects(prefix);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
   
 
   return (
@@ -160,26 +178,52 @@ export default function FileExplorer({
         </nav>
         <div className="flex gap-2">
           {prefix !== "" && (
-            <Button
-              onClick={() =>
-                handleUploadClick(prefix.endsWith("/") ? prefix : prefix + "/")
-              }
-              variant="default"
-              size="sm"
-              className="gap-1"
-            >
-              <UploadIcon className="w-4 h-4" /> Upload to Current
-            </Button>
+            <>
+              <Button
+                onClick={() =>
+                  handleUploadClick(prefix.endsWith("/") ? prefix : prefix + "/")
+                }
+                variant="default"
+                size="sm"
+                className="gap-1"
+              >
+                <UploadIcon className="w-4 h-4" /> Upload to Current
+              </Button>
+              <Button
+                onClick={() => {
+                  const name = window.prompt("Enter new folder name:");
+                  if (name) handleCreateFolder(name);
+                }}
+                variant="secondary"
+                size="sm"
+                className="gap-1"
+              >
+                + Create Folder in Current
+              </Button>
+            </>
           )}
           {prefix === "" && (
-            <Button
-              onClick={() => handleUploadClick("")}
-              variant="default"
-              size="sm"
-              className="gap-1"
-            >
-              <UploadIcon className="w-4 h-4" /> Upload to Root
-            </Button>
+            <>
+              <Button
+                onClick={() => handleUploadClick("")}
+                variant="default"
+                size="sm"
+                className="gap-1"
+              >
+                <UploadIcon className="w-4 h-4" /> Upload to Root
+              </Button>
+              <Button
+                onClick={() => {
+                  const name = window.prompt("Enter new folder name:");
+                  if (name) handleCreateFolder(name);
+                }}
+                variant="secondary"
+                size="sm"
+                className="gap-1"
+              >
+                + Create Folder in Root
+              </Button>
+            </>
           )}
           <input
             ref={fileInputRef}
