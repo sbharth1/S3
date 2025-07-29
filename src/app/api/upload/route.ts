@@ -8,7 +8,7 @@ const client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY as string,
     secretAccessKey: process.env.AWS_SECRET_KEY as string,
   },
-  region: "ap-south-1",
+  region: process.env.AWS_REGION as string,
 });
 
 export async function POST(request: Request) {
@@ -17,8 +17,8 @@ export async function POST(request: Request) {
   if (!key) throw new Error("key is required");
 
   const command = new PutObjectCommand({
-    Bucket: "s3-user-interface-explorer",
-    Key: key,
+    Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+    Key: key, 
   });
 
   const url = await getSignedUrl(client, command, { expiresIn: 3600 });

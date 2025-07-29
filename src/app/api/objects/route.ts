@@ -7,19 +7,18 @@ const client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY as string,
     secretAccessKey: process.env.AWS_SECRET_KEY as string,
   },
-  region: "ap-south-1",
+  region: process.env.AWS_REGION as string,
 });
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const prefix = searchParams.get("prefix") ?? undefined;
   const command = new ListObjectsV2Command({
-    Bucket: "s3-user-interface-explorer",
+    Bucket: process.env.AWS_S3_BUCKET_NAME as string,
     Delimiter: "/",
     Prefix: prefix,
   });
   const res = await client.send(command);
-  console.log(res);
 
   const lastResult =
     res.Contents?.map((e) => ({
