@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { UserButton } from "@clerk/nextjs";
+// import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import CustomUserIcon from "./UserIcon";
 
 const Navbar: React.FC = () => {
   const { setTheme } = useTheme();
@@ -38,7 +39,8 @@ const Navbar: React.FC = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <UserButton />
+        {/* <UserButton/> */}
+        <CustomUserIcon />
       </div>
     </nav>
   );

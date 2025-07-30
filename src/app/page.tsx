@@ -1,4 +1,4 @@
-import Navbar from "@/components/nav";
+import Navbar from "@/components/Navbar";
 import FileExplorer from "@/components/FileExplorer";
 import Image from "next/image";
 
