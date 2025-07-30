@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { NextURL } from "next/dist/server/web/next-url";
-
+  
 const client = new S3Client({
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY as string,
@@ -21,7 +20,7 @@ export async function GET(request: Request) {
   const res = await client.send(command);
 
   const lastResult =
-    res.Contents?.map((e) => ({
+    res.Contents?.filter((e) => e.Size && e.Size > 0)?.map((e) => ({
       Key: e.Key,
       Size: e.Size,
       LastModified: e.LastModified,
