@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { FolderIcon, FileIcon, UploadIcon, Download,Trash } from "lucide-react";
+import { FolderIcon, FileIcon, UploadIcon, Download } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -184,32 +184,32 @@ export default function FileExplorer({
   }
 
   async function handleDownloadUrl(key: string) {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/download?key=${encodeURIComponent(key)}`
-      );
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `Failed to get download URL (${res.status})`);
-      }
-      const { url } = await res.json();
-      if (!url) throw new Error("No download URL received");
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = key.split("/").pop() || "download";
-      a.target = "_blank"; 
-      a.rel = "noopener noreferrer";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (err: any) {
-      setError(err.message || "Download failed");
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  setError(null);
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/download?key=${encodeURIComponent(key)}`
+    );
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || `Failed to download file (${res.status})`);
     }
+    const blob = await res.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = key.split("/").pop() || "download";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (err: any) {
+    setError(err.message || "Download failed");
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <div
@@ -352,7 +352,7 @@ export default function FileExplorer({
                     className="gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition ml-2"
                     title="Delete this folder"
                   >
-                    <Trash/> Delete
+                    🗑 Delete
                   </Button>
                 </div>
               ))}
@@ -366,19 +366,13 @@ export default function FileExplorer({
                   <span className="flex-1 truncate">
                     {file.Key.replace(prefix, "")}
                   </span>
-                  <div className="flex flex-col">
-                  <span className="ml-4 text-xs text-muted-foreground">size</span>
                   <span className="ml-4 text-xs text-muted-foreground">
                     {(file.Size / 1024).toFixed(1)} KB
                   </span>
-                  </div>
-                  <div className="flex flex-col">
-                  <span className="ml-4 text-xs text-muted-foreground">Date / Time</span>
                   <span className="ml-4 text-xs text-muted-foreground">
                     {file.LastModified &&
                       new Date(file.LastModified).toLocaleString()}
                   </span>
-                  </div>
                   <Button
                     onClick={() => handleUploadClick(file.Key)}
                     variant="secondary"
