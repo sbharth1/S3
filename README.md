@@ -32,3 +32,9 @@ A modern frontend interface built with **Next.js** and **TailwindCSS** to intera
 git clone https://github.com/your-username/aws-s3-ui.git
 cd aws-s3-ui
 pnpm install
+```
+
+
+---------------------------------------------------------------------------------------------------------here GUI ------------------------------------------------------------------------------------------------------------------------------------
+it's for fun: xD
+![Image alt](https://github.com/sbharth1/S3/blob/032abc35636b1b6ddc0007aac279daee4c02f18c/public/Screenshot%202025-07-30%20192919.png)
