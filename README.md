@@ -36,5 +36,5 @@ pnpm install
 
 --------------------------------------here GUI --------------------------------------------
 
-it's for fun: xD
+it's for fun :D
 ![Image alt](https://github.com/sbharth1/S3/blob/032abc35636b1b6ddc0007aac279daee4c02f18c/public/Screenshot%202025-07-30%20192919.png)
